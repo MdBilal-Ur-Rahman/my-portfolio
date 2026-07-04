@@ -63,11 +63,7 @@ const Contact = () => {
     });
 
     try {
-      console.log("Sending Contact Form...", formData);
-
       const response = await sendContactMessage(formData);
-
-      console.log("Server Response:", response);
 
       setStatus({
         type: "success",
@@ -81,8 +77,6 @@ const Contact = () => {
         message: "",
       });
     } catch (error) {
-      console.error("Contact Form Error:", error);
-
       let errorMessage = "Something went wrong. Please try again.";
 
       if (error.code === "ECONNABORTED") {

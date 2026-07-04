@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 15000, // 15 seconds
+  timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -15,8 +15,6 @@ export const sendContactMessage = async (formData) => {
     const response = await api.post("/contact", formData);
     return response.data;
   } catch (error) {
-    console.error("API Error:", error);
-
     if (error.code === "ECONNABORTED") {
       throw new Error("Request timed out. Please try again.");
     }
@@ -34,3 +32,7 @@ export const sendContactMessage = async (formData) => {
     throw new Error(error.message || "Something went wrong.");
   }
 };
+
+
+
+

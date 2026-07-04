@@ -11,30 +11,23 @@ export const sendEmail = async ({
   subject,
   message,
 }) => {
-  try {
-    const response = await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: process.env.RECEIVER_EMAIL || "bilalurrahman27@gmail.com",
-      replyTo: email,
-      subject: `📩 ${subject}`,
-      html: `
-        <h2>New Portfolio Contact Form Submission</h2>
+  const response = await resend.emails.send({
+    from: "onboarding@resend.dev",
+    to: process.env.RECEIVER_EMAIL || "bilalurrahman27@gmail.com",
+    replyTo: email,
+    subject: `📩 ${subject}`,
+    html: `
+      <h2>New Portfolio Contact Form Submission</h2>
 
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Subject:</strong> ${subject}</p>
 
-        <hr />
+      <hr />
 
-        <p>${message}</p>
-      `,
-    });
+      <p>${message}</p>
+    `,
+  });
 
-    console.log("✅ Email Sent:", response);
-
-    return response;
-  } catch (error) {
-    console.error("❌ Resend Error:", error);
-    throw error;
-  }
+  return response;
 };
