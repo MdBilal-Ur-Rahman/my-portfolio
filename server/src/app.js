@@ -12,35 +12,50 @@ const app = express();
 // Security headers
 app.use(helmet());
 
-// CORS configuration
+// Allowed Origins
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://mdbilal-portfolio.vercel.app",
+];
+
+// CORS Configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: (origin, callback) => {
+      // Allow Postman, Render health checks, etc.
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST"],
     credentials: true,
   })
 );
 
-// HTTP request logging (Development only)
+// Development Logs
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Rate Limiting
+// Rate Limiter
 app.use(rateLimiter);
 
-// Parse JSON body
+// Parse JSON
 app.use(express.json());
 
-// Test route
+// Test Route
 app.get("/", (req, res) => {
   res.send("Portfolio Backend API is Running 🚀");
 });
 
-// API routes
+// API Routes
 app.use("/api", contactRoutes);
 
-// Global error handler (Always Last)
+// Error Handler
 app.use(errorHandler);
 
 export default app;
