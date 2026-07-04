@@ -33,32 +33,45 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+
     const { name, email, subject, message } = formData;
 
     if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) {
-      return setStatus({
+      setStatus({
         type: "error",
         message: "Please fill in all fields.",
       });
+      return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
-      return setStatus({
+      setStatus({
         type: "error",
         message: "Please enter a valid email address.",
       });
+      return;
     }
 
+    setLoading(true);
+
+    setStatus({
+      type: "",
+      message: "",
+    });
+
     try {
-      setLoading(true);
+      console.log("Sending Contact Form...", formData);
 
       const response = await sendContactMessage(formData);
 
+      console.log("Server Response:", response);
+
       setStatus({
         type: "success",
-        message: response.message,
+        message: response?.message || "Message sent successfully!",
       });
 
       setFormData({
@@ -68,11 +81,26 @@ const Contact = () => {
         message: "",
       });
     } catch (error) {
+      console.error("Contact Form Error:", error);
+
+      let errorMessage = "Something went wrong. Please try again.";
+
+      if (error.code === "ECONNABORTED") {
+        errorMessage = "Request timed out. Please try again.";
+      } else if (error.response) {
+        errorMessage =
+          error.response.data?.message ||
+          `Server Error (${error.response.status})`;
+      } else if (error.request) {
+        errorMessage =
+          "Unable to reach the server. Please check your internet connection.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       setStatus({
         type: "error",
-        message:
-          error.response?.data?.message ||
-          "Something went wrong. Please try again.",
+        message: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -85,7 +113,6 @@ const Contact = () => {
       className="bg-slate-950 py-20 text-white"
     >
       <div className="mx-auto max-w-3xl px-6">
-        {/* Heading */}
         <div className="mb-12 text-center">
           <h2 className="text-4xl font-extrabold md:text-5xl">
             Contact <span className="text-cyan-400">Me</span>
@@ -97,13 +124,11 @@ const Contact = () => {
           </p>
         </div>
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit}
           noValidate
           className="space-y-5"
         >
-          {/* Name */}
           <div>
             <label
               htmlFor="name"
@@ -124,7 +149,6 @@ const Contact = () => {
             />
           </div>
 
-          {/* Email */}
           <div>
             <label
               htmlFor="email"
@@ -145,7 +169,6 @@ const Contact = () => {
             />
           </div>
 
-          {/* Subject */}
           <div>
             <label
               htmlFor="subject"
@@ -165,7 +188,6 @@ const Contact = () => {
             />
           </div>
 
-          {/* Message */}
           <div>
             <label
               htmlFor="message"
@@ -185,7 +207,6 @@ const Contact = () => {
             />
           </div>
 
-          {/* Status */}
           {status.message && (
             <div
               className={`rounded-lg p-3 text-sm ${
@@ -198,7 +219,6 @@ const Contact = () => {
             </div>
           )}
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
