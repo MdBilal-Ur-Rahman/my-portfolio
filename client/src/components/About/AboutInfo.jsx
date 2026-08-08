@@ -38,12 +38,12 @@ const AboutInfo = () => {
         </span>
       </div>
 
-      <div className="mb-5 flex items-center justify-between border-b border-slate-700 pb-3">
+      {/* <div className="mb-5 flex items-center justify-between border-b border-slate-700 pb-3">
         <span className="font-medium text-slate-400">Phone</span>
         <span className="text-white">
           {personal.phone}
         </span>
-      </div>
+      </div> */}
 
       <div className="flex items-center justify-between">
         <span className="font-medium text-slate-400">Status</span>

@@ -1,13 +1,13 @@
 const personal = {
   name: "Md Bilal Ur Rahman",
 
-  logo: "Bilal",
+  logo: "Bilal Ur Rahman",
 
   role: "MERN Stack Developer",
 
   email: "bilalurrahman27@gmail.com",
 
-  phone: "+91 6300285364",
+  // phone: "+91 6300285364",
 
   location: "Telangana, India",
 
